@@ -12,7 +12,6 @@
     (Integer. (re-find #"[0-9]+" (first
         (:content (first (html/select dom trump-selector))))))))
 
-(def text (:body @(http/get appr-url)))
-(println (clojure.string/includes? text "rbnSection323SECTION-526"))
-(def rating (find-rating-in-dom (html/html-snippet (:body @(http/get appr-url)))))
-(println rating)
+(def rating
+  (find-rating-in-dom
+    (html/html-snippet (:body @(http/get appr-url)))))
