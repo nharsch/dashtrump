@@ -4,6 +4,8 @@
 
 (def appr-url "http://www.gallup.com/poll/201617/gallup-daily-trump-job-approval.aspx")
 
+; TODO alternate location to check
+; TODO backup value if nothing is found
 (defn find-rating-in-dom [dom]
   (let
     [trump-selector
@@ -12,6 +14,19 @@
     (Integer. (re-find #"[0-9]+" (first
         (:content (first (html/select dom trump-selector))))))))
 
-(def rating
-  (find-rating-in-dom
-    (html/html-snippet (:body @(http/get appr-url)))))
+
+(defn get-template [rating]
+  (if (< rating 50)
+    (str "Yup. Trump's approval rating is down to " rating "%")
+    (str "Dear God, something is wrong. "
+         rating "% of Americans approve of DT")))
+
+(defn handler [request]
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body (get-template
+           (find-rating-in-dom
+             (html/html-snippet (:body @(http/get appr-url))))
+           )
+  }
+)
