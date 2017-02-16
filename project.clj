@@ -10,6 +10,7 @@
                  [enlive "1.1.6"]
                  [http-kit "2.2.0"]
                  ]
+  :main dashtrump.core
   :ring {:handler dashtrump.core/handler}
   :profiles {:uberjar {:aot :all}}
   )
