@@ -3,11 +3,10 @@
             [net.cgrand.enlive-html :as html]
             [ring.adapter.jetty :as jetty]
             [clojure.core.cache :as cache]
-            [environ.core :refer [env]]
-            ))
+            [environ.core :refer [env]]))
 
 (def appr-url "http://www.gallup.com/poll/201617/gallup-daily-trump-job-approval.aspx")
-(def cache-timeout-ms (* 1000 60 60)) ;1 hr
+(def cache-timeout-ms (* 1000 60 60 4)); 4 hr
 
 ; TODO alternate location to check
 ; TODO backup value if nothing is found
