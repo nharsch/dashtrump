@@ -1,1 +1,2 @@
-web: java $JVM_OPTS -cp target/dashtrump-standalone.jar clojure.main -m dashtrump.web
+web: lein ring server-headless $PORT
+
