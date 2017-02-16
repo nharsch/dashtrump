@@ -11,4 +11,5 @@
                  [http-kit "2.2.0"]
                  ]
   :ring {:handler dashtrump.core/handler}
+  :profiles {:uberjar {:aot :all}}
   )
