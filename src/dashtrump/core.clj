@@ -41,3 +41,9 @@
    :body (get-template
            (find-rating-in-dom
              (html/html-snippet (:body @(http/get appr-url)))))})
+
+(defn -main [& [port]]
+  (let [port (Integer. (or port (env :port) 5000))]
+    (jetty/run-jetty handler {:port port :join? false})))
+
+

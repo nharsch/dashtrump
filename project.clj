@@ -10,7 +10,8 @@
                  [enlive "1.1.6"]
                  [http-kit "2.2.0"]
                  ]
-  :main dashtrump.core
+  :min-lein-version "2.0.0"
+  :uberjar-name "dashtrump-standalone.jar"
   :ring {:handler dashtrump.core/handler}
   :profiles {:uberjar {:aot :all}}
   )
