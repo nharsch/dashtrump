@@ -1,6 +1,7 @@
 (ns dashtrump.core
   (:require [org.httpkit.client :as http :as http]
             [net.cgrand.enlive-html :as html]
+            [ring.adapter.jetty :as jetty]
             ))
 
 (def appr-url "http://www.gallup.com/poll/201617/gallup-daily-trump-job-approval.aspx")
@@ -43,7 +44,7 @@
              (html/html-snippet (:body @(http/get appr-url)))))})
 
 (defn -main [& [port]]
-  (let [port (Integer. (or port (env :port) 5000))]
+  (let [port 5000]
     (jetty/run-jetty handler {:port port :join? false})))
 
 

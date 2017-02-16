@@ -13,5 +13,6 @@
   :min-lein-version "2.0.0"
   :uberjar-name "dashtrump-standalone.jar"
   :ring {:handler dashtrump.core/handler}
+  :main dashtrump.core
   :profiles {:uberjar {:aot :all}}
   )
