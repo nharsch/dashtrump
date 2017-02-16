@@ -2,10 +2,12 @@
   (:require [org.httpkit.client :as http :as http]
             [net.cgrand.enlive-html :as html]
             [ring.adapter.jetty :as jetty]
+            [clojure.core.cache :as cache]
             [environ.core :refer [env]]
             ))
 
 (def appr-url "http://www.gallup.com/poll/201617/gallup-daily-trump-job-approval.aspx")
+(def cache-timeout-ms (* 1000 60 60)) ;1 hr
 
 ; TODO alternate location to check
 ; TODO backup value if nothing is found
@@ -35,15 +37,31 @@
     (base {:title "America Still Hates Trump" :main (yup rating)})
     (base {:title "Make America Hate Trump Again" :main (nope rating)})))
 
+(def C (atom (cache/ttl-cache-factory {} :ttl cache-timeout-ms)))
+
+(defn get-rating []
+  ;; "grab rating from cache or from gallup"
+  (if (cache/has? @C :rating)
+    (:rating @C)
+    ;update cache
+    ;call get-rating
+    (do
+      (swap! C
+        #(cache/miss % :rating
+          (find-rating-in-dom
+            (->
+              (println "calling gallup")
+              (html/html-snippet (:body @(http/get appr-url)))))))
+      (:rating @C)
+)))
+
 (base {:title "test" :main (yup 50)})
 
 (defn handler [request]
   {:status 200
    :headers {"Content-Type" "text/html"}
    :body (get-template
-           ;TODO: cache
-           (find-rating-in-dom
-             (html/html-snippet (:body @(http/get appr-url)))))})
+           (get-rating))})
 
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 5000))]
