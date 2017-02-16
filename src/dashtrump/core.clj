@@ -1,6 +1,7 @@
 (ns dashtrump.core
   (:require [org.httpkit.client :as http :as http]
-            [net.cgrand.enlive-html :as html]))
+            [net.cgrand.enlive-html :as html]
+            ))
 
 (def appr-url "http://www.gallup.com/poll/201617/gallup-daily-trump-job-approval.aspx")
 
@@ -17,25 +18,22 @@
 (html/deftemplate base "dashtrump/templates/base.html"
   [{:keys [title main]}]
   [:title] (html/content title)
-  [:body]  (html/content main))
+  [:body]  (html/substitute main))
 
-(html/deftemplate yup "dashtrump/templates/yup.html"
+(html/defsnippet yup "dashtrump/templates/yup.html" [:body]
   [rating]
   [:span#rating] (html/content (str rating)))
 
-(html/deftemplate nope "dashtrump/templates/yup.html"
+(html/defsnippet nope "dashtrump/templates/yup.html" [:body]
   [rating]
   [:span#rating] (html/content (str rating)))
 
 (defn get-template [rating]
   (if (< rating 50)
-    (yup rating)
-    (nope rating)
-    ;; (str "Yup. Trump's approval rating is down to " rating "%")
-    ;; (str "Dear God, something is wrong. "
-    ;;      rating "% of Americans approve of DT")
-    )
-)
+    (base {:title "America Still Hates Trump" :main (yup rating)})
+    (base {:title "Make America Hate Trump Again" :main (nope rating)})))
+
+(base {:title "test" :main (yup 50)})
 
 (defn handler [request]
   {:status 200
