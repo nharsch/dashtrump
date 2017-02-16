@@ -41,6 +41,7 @@
   {:status 200
    :headers {"Content-Type" "text/html"}
    :body (get-template
+           ;TODO: cache
            (find-rating-in-dom
              (html/html-snippet (:body @(http/get appr-url)))))})
 
