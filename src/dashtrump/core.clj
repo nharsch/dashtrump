@@ -3,6 +3,7 @@
             [net.cgrand.enlive-html :as html]
             [ring.adapter.jetty :as jetty]
             [clojure.core.cache :as cache]
+            [clojure.data.json :as json]
             [environ.core :refer [env]]))
 
 (def appr-url "http://www.gallup.com/poll/201617/gallup-daily-trump-job-approval.aspx")
@@ -56,11 +57,18 @@
 
 (base {:title "test" :main (yup 50)})
 
+; TODO: rating endpoint
 (defn handler [request]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (get-template
-           (get-rating))})
+  (println (:uri request))
+  (if (= "/rating" (:uri request))
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (json/write-str {:rating (str (get-rating))})}
+
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (get-template
+             (get-rating))}))
 
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 5000))]
