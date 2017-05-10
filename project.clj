@@ -14,6 +14,7 @@
                  [environ "0.5.0"]
                  [http-kit "2.2.0"]
                  [org.clojure/data.json "0.2.6"]
+                 [ring-cors "0.1.10"]
                  ]
   :min-lein-version "2.0.0"
   :uberjar-name "dashtrump-standalone.jar"

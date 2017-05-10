@@ -4,7 +4,9 @@
             [ring.adapter.jetty :as jetty]
             [clojure.core.cache :as cache]
             [clojure.data.json :as json]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [ring.middleware.cors :refer [wrap-cors]]
+            ))
 
 (def appr-url "http://www.gallup.com/poll/201617/gallup-daily-trump-job-approval.aspx")
 (def cache-timeout-ms (* 1000 60 60 4)); 4 hr
@@ -72,4 +74,8 @@
 
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 5000))]
-    (jetty/run-jetty handler {:port port :join? false})))
+    (jetty/run-jetty
+      (wrap-cors handler
+        :access-control-allow-origin [#".*"]
+        :access-control-allow-methods [:get])
+      {:port port :join? false})))
