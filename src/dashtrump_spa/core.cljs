@@ -1,7 +1,8 @@
 (ns dashtrump_spa.core
-  (:require 
+  (:require
     [ajax.core :refer [GET]]
     [reagent.core :as reagent]
+    [cljs.core.async :refer [<! timeout]]
     ))
 
 (enable-console-print!)
@@ -23,15 +24,27 @@
                  :fetched-state "NOT FETCHED"
                  }))
 
+
+; state changers
+(defn reset-state []
+  "set to initial state"
+  (reset! app-state {
+                     :rating "not set"
+                     :message "Asking America..."
+                     :fetched-state "NOT FETCHED"}))
+
+
 (defn set-getting-rating []
   "set state to fetching"
-  (swap! app-state assoc :fetched-state "FETCHING"))
+  (reset! app-state {:fetched-state "FETCHING" :message "Asking America..."}))
+
 
 (defn set-got-rating [rating]
   "update rating"
-  (reset! app-state {:rating rating :fetched-state "FETCHED"}))
+  (reset! app-state {:rating rating
+                      :fetched-state "FETCHED"
+                      :message (str "Yup. Trump's current Approval Rating is " rating "%")}))
 
-;; (defn page-load)
 
 (defn get-rating []
   "get approval page, return HTML sting"
@@ -41,13 +54,13 @@
                 #(set-got-rating (get % "rating"))
                 }))
 
+
 (defn message []
-  [:div
-   [:h1 "rating is " (:rating @app-state)]
-   [:p "app state is " (:fetched-state @app-state)]
-   [:button {:onClick #(get-rating)} "get rating"]
-   ])
+  (println @app-state)
+     [:h2 {:class "answer"} (:message @app-state)]
+   )
 
 
+(reset-state) 
 (reagent/render [message] (js/document.querySelector "#app"))
 (get-rating) 
