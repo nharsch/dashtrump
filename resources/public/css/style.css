@@ -1,12 +1,25 @@
 /* some style */
 
-body {
-    background-image: url("/img/inaug_crowd.jpg");
+.app-background {
+
     background-size: cover;
-    font-family: helvetica, sans-serif;
-    text-align: center;
-    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+
 }
+
+.app-background--loading {
+    background-image: url("/img/inaug_crowd.jpg");
+}
+
+.app-background--loaded {
+    background-image: url("/img/mad_trump.jpg");
+}
+
 
 .hero {
     letter-spacing: .04em;
@@ -19,6 +32,10 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+
+    font-family: helvetica, sans-serif;
+    text-align: center;
+    color: white;
 }
 
 .message-container {

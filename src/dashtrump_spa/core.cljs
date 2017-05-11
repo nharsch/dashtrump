@@ -31,6 +31,7 @@
   (reset! app-state {
                      :rating "not set"
                      :message "Asking America..."
+                     :answer nil
                      :fetched-state "NOT FETCHED"}))
 
 
@@ -43,7 +44,8 @@
   "update rating"
   (reset! app-state {:rating rating
                       :fetched-state "FETCHED"
-                      :message (str "Yup. Trump's current Approval Rating is " rating "%")}))
+                      :answer "Yup"
+                      :message (str "Trump's current Approval Rating is " rating "%")}))
 
 
 (defn get-rating []
@@ -55,12 +57,26 @@
                 }))
 
 
-(defn message []
-  (println @app-state)
-     [:h2 {:class "answer"} (:message @app-state)]
+(defn answer [answer]
+   [:h2 {:class "answer"} (or answer "?")]
    )
 
 
-(reset-state) 
-(reagent/render [message] (js/document.querySelector "#app"))
-(get-rating) 
+(defn message [message]
+  [:div {:class "message"} message])
+
+(defn app [] 
+  (println @app-state)
+  [:div {:class (str "app-background" " " (if (= (:fetched-state @app-state) "FETCHED") "app-background--loaded" "app-backround--loading"))}
+    [:div {:class "app-container"}
+      [:h1 {:class "hero"} "Does America Still Hate Trump?"]
+      (answer (:answer @app-state))
+      (message (:message @app-state))
+    ]
+  ]
+  )
+
+
+(reset-state)
+(reagent/render [app] (js/document.querySelector "#app"))
+(get-rating)
